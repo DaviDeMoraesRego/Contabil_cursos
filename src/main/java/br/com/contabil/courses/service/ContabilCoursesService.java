@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import br.com.contabil.courses.adapter.ContabilCoursesAdapter;
 import br.com.contabil.courses.dto.ContabilCoursesDto;
 import br.com.contabil.courses.entity.ContabilCoursesEntity;
-import br.com.contabil.courses.exception.NotFoundExceptionException;
-import br.com.contabil.courses.exception.internalServerError;
+import br.com.contabil.courses.exception.NotFoundException;
+import br.com.contabil.courses.exception.InternalServerError;
 import br.com.contabil.courses.repository.ContabilCoursesRepository;
 
 @Service
@@ -28,10 +28,10 @@ public class ContabilCoursesService {
 			List<ContabilCoursesEntity> entities = repository.findAll();
 			notFoundChecker(entities.size());
 			entities.forEach(entity -> dtos.add(adapter.adapterEntityToDto(entity)));
-		} catch (NotFoundExceptionException e) {
-			throw new NotFoundExceptionException(e.getMessage());
+		} catch (NotFoundException e) {
+			throw new NotFoundException(e.getMessage());
 		} catch (Exception e) {
-			throw new internalServerError(e.getMessage());
+			throw new InternalServerError(e.getMessage());
 		}
 		return dtos;
 	}
@@ -40,12 +40,12 @@ public class ContabilCoursesService {
 		ContabilCoursesDto dto;
 		try {
 			ContabilCoursesEntity entity = repository.findById(id)
-					.orElseThrow(() -> new NotFoundExceptionException("Nenhum registro encontrado."));
+					.orElseThrow(() -> new NotFoundException("Nenhum registro encontrado."));
 			dto = adapter.adapterEntityToDto(entity);
-		} catch (NotFoundExceptionException e) {
-			throw new NotFoundExceptionException(e.getMessage());
+		} catch (NotFoundException e) {
+			throw new NotFoundException(e.getMessage());
 		} catch (Exception e) {
-			throw new internalServerError(e.getMessage());
+			throw new InternalServerError(e.getMessage());
 		}
 		return dto;
 	}
@@ -55,20 +55,20 @@ public class ContabilCoursesService {
 
 		try {
 			ContabilCoursesEntity entity = repository.findByTitle(title)
-					.orElseThrow(() -> new NotFoundExceptionException("Nenhum registro encontrado."));
+					.orElseThrow(() -> new NotFoundException("Nenhum registro encontrado."));
 			dto = adapter.adapterEntityToDto(entity);
-		} catch (NotFoundExceptionException e) {
-			throw new NotFoundExceptionException(e.getMessage());
+		} catch (NotFoundException e) {
+			throw new NotFoundException(e.getMessage());
 		} catch (Exception e) {
-			throw new internalServerError(e.getMessage());
+			throw new InternalServerError(e.getMessage());
 		}
 
 		return dto;
 	}
 
-	private static void notFoundChecker(int paramForCheck) throws NotFoundExceptionException {
+	private static void notFoundChecker(int paramForCheck) throws NotFoundException {
 		if (paramForCheck == 0) {
-			throw new NotFoundExceptionException("Nenhum registro encontrado.");
+			throw new NotFoundException("Nenhum registro encontrado.");
 		}
 	}
 }

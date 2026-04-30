@@ -4,14 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import br.com.contabil.courses.dto.ResponseDto;
 import br.com.contabil.courses.exception.BadRequestException;
 import br.com.contabil.courses.exception.ConflictException;
-import br.com.contabil.courses.exception.NotFoundExceptionException;
-import br.com.contabil.courses.exception.internalServerError;
+import br.com.contabil.courses.exception.NotFoundException;
+import br.com.contabil.courses.exception.InternalServerError;
 import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
@@ -31,15 +30,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler{
 			.body((new ResponseDto<>(null, badRequestException.getMessage())));
     }
 	
-	@ExceptionHandler(NotFoundExceptionException.class)
-    public ResponseEntity<Object> handleNotFound(NotFoundExceptionException notFoundException) {
+	@ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> handleNotFound(NotFoundException notFoundException) {
 		return ResponseEntity
 			.status(HttpStatus.NOT_FOUND)
 			.body((new ResponseDto<>(null, notFoundException.getMessage())));
     }
 	
-	@ExceptionHandler(internalServerError.class)
-    public ResponseEntity<Object> handleInternalServerError(internalServerError internalServerError) {
+	@ExceptionHandler(InternalServerError.class)
+    public ResponseEntity<Object> handleInternalServerError(InternalServerError internalServerError) {
 		return ResponseEntity
 			.status(HttpStatus.INTERNAL_SERVER_ERROR)
 			.body((new ResponseDto<>(null, internalServerError.getMessage())));

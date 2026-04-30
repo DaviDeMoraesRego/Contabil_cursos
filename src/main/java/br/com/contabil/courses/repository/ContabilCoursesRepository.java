@@ -12,6 +12,7 @@ import br.com.contabil.courses.entity.ContabilCoursesEntity;
 @Repository
 public interface ContabilCoursesRepository extends JpaRepository<ContabilCoursesEntity, Integer>{
 
-	@Query(value = "SELECT * FROM tab_courses WHERE title = :title", nativeQuery = true)
+	@Query("SELECT c FROM ContabilCoursesEntity c WHERE c.title = :title")
 	Optional<ContabilCoursesEntity> findByTitle(@Param("title") String title);
+
 }
