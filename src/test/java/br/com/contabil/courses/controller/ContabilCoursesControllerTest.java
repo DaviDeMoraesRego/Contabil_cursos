@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,36 +26,39 @@ import br.com.contabil.courses.exception.NotFoundException;
 import br.com.contabil.courses.service.ContabilCoursesService;
 
 @WebMvcTest(controllers = { ContabilCoursesController.class, RestExceptionHandler.class })
+@TestPropertySource(properties = { "app.cors.allowed-origins=http://localhost:3000",
+		"app.security.expected-client-id=http://localhost:3000",
+		"spring.security.oauth2.resourceserver.jwt.issuer-uri=https://awaited-hog-86.clerk.accounts.dev" })
 @DisplayName("ContabilCoursesController - Testes de Integração")
 class ContabilCoursesControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @MockitoBean
-    private ContabilCoursesService service;
+	@MockitoBean
+	private ContabilCoursesService service;
 
-    private ContabilCoursesDto dto;
+	private ContabilCoursesDto dto;
 
-    private static final String BASE_URL = "/contabil-courses/v1";
+	private static final String BASE_URL = "/contabil-courses/v1";
 
-    @BeforeEach
-    void setUp() {
-        dto = new ContabilCoursesDto();
-        dto.setId(1);
-        dto.setTitle("Contabilidade Básica");
-        dto.setImageSrc("http://img1.png");
-    }
+	@BeforeEach
+	void setUp() {
+		dto = new ContabilCoursesDto();
+		dto.setId(1);
+		dto.setTitle("Contabilidade Básica");
+		dto.setImageSrc("http://img1.png");
+	}
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // GET /contabil-courses/v1
-    // ─────────────────────────────────────────────────────────────────────────
+	// ─────────────────────────────────────────────────────────────────────────
+	// GET /contabil-courses/v1
+	// ─────────────────────────────────────────────────────────────────────────
 
-    @Nested
-    @DisplayName("GET /contabil-courses/v1")
-    class FindAll {
+	@Nested
+	@DisplayName("GET /contabil-courses/v1")
+	class FindAll {
 
-        @Test
+		@Test
         @WithMockUser
         @DisplayName("Deve retornar 200 e lista de cursos com sucesso")
         void deveRetornar200_quandoHouverCursos() throws Exception {
@@ -68,7 +72,7 @@ class ContabilCoursesControllerTest {
                     .andExpect(jsonPath("$.errors").doesNotExist());
         }
 
-        @Test
+		@Test
         @WithMockUser
         @DisplayName("Deve retornar 404 quando não há cursos")
         void deveRetornar404_quandoSemCursos() throws Exception {
@@ -79,7 +83,7 @@ class ContabilCoursesControllerTest {
                     .andExpect(jsonPath("$.errors").value("Nenhum registro encontrado."));
         }
 
-        @Test
+		@Test
         @WithMockUser
         @DisplayName("Deve retornar 500 quando service lança InternalServerError")
         void deveRetornar500_quandoErroInterno() throws Exception {
@@ -89,17 +93,17 @@ class ContabilCoursesControllerTest {
                     .andExpect(status().isInternalServerError())
                     .andExpect(jsonPath("$.errors").value("erro interno"));
         }
-    }
+	}
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // GET /contabil-courses/v1/{id}/
-    // ─────────────────────────────────────────────────────────────────────────
+	// ─────────────────────────────────────────────────────────────────────────
+	// GET /contabil-courses/v1/{id}/
+	// ─────────────────────────────────────────────────────────────────────────
 
-    @Nested
-    @DisplayName("GET /contabil-courses/v1/{id}/")
-    class FindById {
+	@Nested
+	@DisplayName("GET /contabil-courses/v1/{id}/")
+	class FindById {
 
-        @Test
+		@Test
         @WithMockUser
         @DisplayName("Deve retornar 200 e curso encontrado pelo id")
         void deveRetornar200_quandoEncontrado() throws Exception {
@@ -112,7 +116,7 @@ class ContabilCoursesControllerTest {
                     .andExpect(jsonPath("$.errors").doesNotExist());
         }
 
-        @Test
+		@Test
         @WithMockUser
         @DisplayName("Deve retornar 404 quando curso não encontrado")
         void deveRetornar404_quandoNaoEncontrado() throws Exception {
@@ -124,7 +128,7 @@ class ContabilCoursesControllerTest {
                     .andExpect(jsonPath("$.errors").value("Nenhum registro encontrado."));
         }
 
-        @Test
+		@Test
         @WithMockUser
         @DisplayName("Deve retornar 500 quando service lança InternalServerError")
         void deveRetornar500_quandoErroInterno() throws Exception {
@@ -134,17 +138,17 @@ class ContabilCoursesControllerTest {
                     .andExpect(status().isInternalServerError())
                     .andExpect(jsonPath("$.errors").value("erro interno"));
         }
-    }
+	}
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // GET /contabil-courses/v1/title/{title}/
-    // ─────────────────────────────────────────────────────────────────────────
+	// ─────────────────────────────────────────────────────────────────────────
+	// GET /contabil-courses/v1/title/{title}/
+	// ─────────────────────────────────────────────────────────────────────────
 
-    @Nested
-    @DisplayName("GET /contabil-courses/v1/title/{title}/")
-    class FindByTitle {
+	@Nested
+	@DisplayName("GET /contabil-courses/v1/title/{title}/")
+	class FindByTitle {
 
-        @Test
+		@Test
         @WithMockUser
         @DisplayName("Deve retornar 200 e curso encontrado pelo título")
         void deveRetornar200_quandoEncontrado() throws Exception {
@@ -156,7 +160,7 @@ class ContabilCoursesControllerTest {
                     .andExpect(jsonPath("$.errors").doesNotExist());
         }
 
-        @Test
+		@Test
         @WithMockUser
         @DisplayName("Deve retornar 404 quando título não encontrado")
         void deveRetornar404_quandoNaoEncontrado() throws Exception {
@@ -168,7 +172,7 @@ class ContabilCoursesControllerTest {
                     .andExpect(jsonPath("$.errors").value("Nenhum registro encontrado."));
         }
 
-        @Test
+		@Test
         @WithMockUser
         @DisplayName("Deve retornar 500 quando service lança InternalServerError")
         void deveRetornar500_quandoErroInterno() throws Exception {
@@ -178,5 +182,5 @@ class ContabilCoursesControllerTest {
                     .andExpect(status().isInternalServerError())
                     .andExpect(jsonPath("$.errors").value("erro interno"));
         }
-    }
+	}
 }

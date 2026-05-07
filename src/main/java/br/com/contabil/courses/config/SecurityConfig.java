@@ -36,7 +36,7 @@ public class SecurityConfig {
 	@Value("${app.swagger.enabled:false}")
 	private boolean swaggerEnabled;
 
-	@Value("${app.cors.allowed-origins}")
+	@Value("${app.security.expected-azp}")
 	private String expectedClientId;
 
 	private static final String[] SWAGGER_WHITELIST = { "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**",
